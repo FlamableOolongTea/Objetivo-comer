@@ -1,6 +1,6 @@
 // Service worker: guarda la app en el teléfono para que abra sin internet.
 // Si cambiás algún archivo, subí el número de versión para que los teléfonos bajen lo nuevo.
-const VERSION = "oc-v1";
+const VERSION = "oc-v2";
 const SHELL = ["./", "index.html", "app.js", "config.js", "supabase.js", "manifest.webmanifest", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", (e) => {
