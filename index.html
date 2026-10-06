@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d1214">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Objetivo Comer">
+<title>Objetivo Comer</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+html, body { margin: 0; }
+:root { padding-top: env(safe-area-inset-top, 0px); }
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+
+/* Layout: one phone-width column, a fixed bottom tab bar, cards only where something is a separate object. Dark by request. */
+:root {
+  color-scheme: dark;
+  --bg: #0d1214;
+  --surface: #151c1f;
+  --surface-2: #1d2629;
+  --line: #2a3539;
+  --fg: #e7edef;
+  --muted: #8b9a9f;
+  --accent: #f2a541;
+  --accent-ink: #1b1306;
+  --good: #5cc8a8;
+  --bad: #ef6b5b;
+  --lilac: #a99cf0;
+  --font-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius: 14px;
+}
+html, body { background: var(--bg); color: var(--fg); }
+body { font-family: var(--font-body); font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+* { box-sizing: border-box; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.app { max-width: 520px; margin: 0 auto; padding-inline: 16px; padding-block: 14px 110px; display: flex; flex-direction: column; gap: 16px; }
+
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 28px; letter-spacing: .5px; text-transform: uppercase; line-height: 1; }
+.brand span { color: var(--accent); }
+.goal-chip { white-space: nowrap; background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.goal-chip b { color: var(--fg); }
+.goal-panel { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.goal-panel label { font-size: 13px; color: var(--muted); }
+
+.notice { background: var(--surface-2); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+
+.tab { display: flex; flex-direction: column; gap: 16px; }
+h2, h3 { margin: 0; text-wrap: balance; }
+h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); font-weight: 600; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.nav .lbl { font-weight: 600; text-align: center; flex: 1; }
+.nav .lbl small { display: block; color: var(--muted); font-weight: 500; font-size: 12px; }
+.icon-btn { background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; width: 38px; height: 38px; display: grid; place-items: center; font-size: 18px; line-height: 1; }
+.icon-btn:disabled { opacity: .35; cursor: default; }
+
+.summary { display: flex; align-items: center; gap: 18px; }
+.ring { flex: 0 0 auto; width: 132px; height: 132px; position: relative; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring .center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.big { font-family: var(--font-display); font-weight: 800; font-size: 40px; line-height: .95; font-variant-numeric: tabular-nums; }
+.ring .center small { color: var(--muted); font-size: 12px; }
+.sumtext { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.left-big { font-family: var(--font-display); font-weight: 600; font-size: 24px; line-height: 1.05; }
+.left-big.good { color: var(--good); } .left-big.bad { color: var(--bad); }
+.mealmini { display: grid; grid-template-columns: auto auto; gap: 2px 12px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.mealmini span:nth-child(even) { text-align: right; color: var(--fg); }
+
+label.f { font-weight: 600; font-size: 14px; }
+textarea, input[type=number], input[type=date], select {
+  width: 100%; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-width: 0;
+}
+textarea { resize: vertical; min-height: 64px; }
+.row { display: flex; gap: 8px; }
+.row > * { flex: 1; min-width: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { background: transparent; border: 1px dashed var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--muted); }
+.chip:hover { color: var(--fg); border-color: var(--muted); }
+.primary { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 10px; padding: 12px; font-weight: 700; font-size: 15px; }
+.primary:disabled { opacity: .6; cursor: default; }
+.ghost { background: transparent; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-weight: 600; }
+.msg { margin: 0; font-size: 13px; color: var(--bad); }
+.hint { margin: 0; font-size: 13px; color: var(--muted); }
+
+.pending { border-color: var(--accent); }
+.pend-items { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.pend-items div, .it-row { display: flex; justify-content: space-between; gap: 10px; font-variant-numeric: tabular-nums; }
+.pend-items div span:first-child { min-width: 0; }
+.pend-items .q { color: var(--muted); }
+.pend-total { display: flex; align-items: center; gap: 10px; }
+.pend-total input { max-width: 120px; font-weight: 700; }
+
+.meal-group { display: flex; flex-direction: column; gap: 6px; }
+.meal-head { display: flex; justify-content: space-between; align-items: baseline; }
+.meal-head span { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 13px; }
+.item { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 10px 10px 12px; display: flex; gap: 10px; align-items: flex-start; }
+.item .body { flex: 1; min-width: 0; }
+.item .desc { overflow-wrap: anywhere; }
+.item .det { font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.item .kc { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.del { background: transparent; border: 0; color: var(--muted); font-size: 18px; line-height: 1; padding: 0 2px; }
+.del:hover { color: var(--bad); }
+.empty { color: var(--muted); text-align: center; padding: 18px 8px; border: 1px dashed var(--line); border-radius: var(--radius); font-size: 14px; }
+
+.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+.stat .v { font-family: var(--font-display); font-weight: 800; font-size: 28px; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat .k { font-size: 12px; color: var(--muted); }
+
+svg text { font-family: var(--font-body); }
+.ax { fill: var(--muted); font-size: 10px; }
+.ax-strong { fill: var(--fg); font-size: 10px; font-weight: 700; }
+.val { fill: var(--fg); font-size: 10px; font-weight: 600; }
+.grid { stroke: var(--line); stroke-width: 1; }
+.goal-line { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.goal-txt { fill: var(--accent); font-size: 10px; font-weight: 700; }
+.chart { width: 100%; height: auto; display: block; }
+
+.legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 13px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.deltas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.delta { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+.delta .k { font-size: 12px; color: var(--muted); }
+.delta .v { font-family: var(--font-display); font-weight: 800; font-size: 26px; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.delta .d { font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.d.good { color: var(--good); } .d.bad { color: var(--bad); } .d.flat { color: var(--muted); }
+.fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.fields label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); min-width: 0; }
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; }
+th { text-align: right; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+td { text-align: right; padding: 8px; border-bottom: 1px solid var(--line); }
+th:first-child, td:first-child { text-align: left; padding-left: 0; }
+td:last-child, th:last-child { width: 28px; padding-right: 0; }
+
+.friend { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; }
+.friend img { width: 40px; height: 40px; border-radius: 50%; grid-row: span 2; }
+.friend .nm { font-weight: 700; overflow-wrap: anywhere; }
+.friend .nm em { font-style: normal; color: var(--accent); font-size: 12px; font-weight: 600; margin-left: 6px; }
+.friend .sub { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.friend .num { text-align: right; grid-row: span 2; }
+.friend .num .big { font-size: 30px; }
+.friend .num small { display: block; font-size: 11px; color: var(--muted); }
+.friend .bar { grid-column: 1 / -1; height: 6px; background: var(--surface-2); border-radius: 99px; overflow: hidden; margin-top: 6px; }
+.friend .bar span { display: block; height: 100%; border-radius: 99px; }
+.lead { margin: 0; color: var(--muted); font-size: 14px; }
+
+.tabbar { position: fixed; left: 0; right: 0; bottom: 0; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(10px); border-top: 1px solid var(--line); padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)); display: flex; justify-content: center; z-index: 5; }
+.tabbar .in { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); width: 100%; max-width: 520px; }
+.tabbar button { background: transparent; border: 0; padding: 6px 2px; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; color: var(--muted); }
+.tabbar button svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tabbar button[aria-selected="true"] { color: var(--accent); }
+
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(80px + env(safe-area-inset-bottom, 0px)); background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; font-size: 14px; z-index: 6; max-width: calc(100% - 32px); }
+.spin { display: inline-block; width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: sp .8s linear infinite; vertical-align: -2px; margin-right: 6px; }
+@keyframes sp { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+@media (max-width: 380px) { .fields, .deltas { grid-template-columns: 1fr 1fr; } .summary { gap: 12px; } }
+
+/* v2: base de alimentos, edición de la vista previa, cuenta */
+.pi { display: grid; grid-template-columns: minmax(0, 1fr) 84px 56px 22px; gap: 8px; align-items: center; font-variant-numeric: tabular-nums; }
+.pi .n { min-width: 0; overflow-wrap: anywhere; }
+.pi .n small { display: block; color: var(--muted); font-size: 11px; }
+.pi input { padding: 6px 8px; text-align: right; }
+.pi .k { text-align: right; font-weight: 700; }
+.unk { display: grid; grid-template-columns: minmax(0, 1fr) 84px 22px; gap: 8px; align-items: center; }
+.unk .n { min-width: 0; overflow-wrap: anywhere; color: var(--accent); }
+.unk .n small { display: block; color: var(--muted); font-size: 11px; }
+.unk input { padding: 6px 8px; text-align: right; }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--accent); font-weight: 600; font-size: 13px; text-decoration: underline; text-underline-offset: 2px; }
+.flist { display: flex; flex-direction: column; }
+.frow { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14px; align-items: center; }
+.frow:last-child { border-bottom: 0; }
+.frow .n { min-width: 0; overflow-wrap: anywhere; }
+.frow .n small { display: block; color: var(--muted); font-size: 12px; }
+.frow .k { white-space: nowrap; font-variant-numeric: tabular-nums; font-weight: 600; }
+.fields2 { align-items: end; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.fields2 label, .stack label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); min-width: 0; }
+input[type=text], input[type=email], input[type=password], input[type=search] { width: 100%; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.stack { display: flex; flex-direction: column; gap: 8px; }
+.sync { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: 0 0 auto; }
+.dot.on { background: var(--good); } .dot.off { background: var(--bad); }
+
+.seg { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 3px; }
+.seg button { background: transparent; border: 0; border-radius: 8px; padding: 8px 6px; font-weight: 600; font-size: 13px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.unk label.save, .stack .unk label.save { grid-column: 1 / -1; display: flex; flex-direction: row; text-align: left; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+.unk label.save input { flex: 0 0 auto; padding: 0; width: 16px; height: 16px; accent-color: var(--accent); }
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">Objetivo <span>comer</span></div>
+    <button id="goalBtn" class="goal-chip" type="button">Meta <b id="goalVal">1.600</b> kcal</button>
+  </header>
+  <form id="goalPanel" class="card goal-panel" hidden>
+    <label for="goalInput">Meta diaria (kcal)</label>
+    <div class="row" style="width:100%">
+      <input id="goalInput" type="number" inputmode="numeric" min="800" max="5000" step="50">
+      <button class="primary" type="submit">Guardar</button>
+      <button class="ghost" type="button" id="goalCancel">Cancelar</button>
+    </div>
+  </form>
+  <div id="notice" class="notice" hidden></div>
+
+  <section id="tab-hoy" class="tab">
+    <div class="nav">
+      <button class="icon-btn" id="prevDay" type="button" aria-label="Día anterior">‹</button>
+      <div class="lbl" id="dayLabel"></div>
+      <button class="icon-btn" id="nextDay" type="button" aria-label="Día siguiente">›</button>
+    </div>
+    <div class="summary" id="summary"></div>
+    <form id="addForm" class="card">
+      <label class="f" for="food">¿Qué comiste?</label>
+      <textarea id="food" rows="2" placeholder="Ej: 250 g de pechuga, ensalada de tomate y lechuga, 1 cda de aceite"></textarea>
+      <div class="chips" id="examples"></div>
+      <div class="row">
+        <select id="meal" aria-label="Comida"></select>
+        <input id="kcalManual" type="number" inputmode="numeric" min="0" placeholder="kcal a mano" aria-label="Calorías manuales">
+      </div>
+      <button id="calcBtn" class="primary" type="submit">Calcular calorías</button>
+      <p id="formMsg" class="msg" hidden></p>
+    </form>
+    <div id="pending"></div>
+    <div id="meals" class="tab"></div>
+  </section>
+
+  <section id="tab-semana" class="tab" hidden>
+    <div class="nav">
+      <button class="icon-btn" id="prevWeek" type="button" aria-label="Semana anterior">‹</button>
+      <div class="lbl" id="weekLabel"></div>
+      <button class="icon-btn" id="nextWeek" type="button" aria-label="Semana siguiente">›</button>
+    </div>
+    <div class="card"><h3>Calorías por día</h3><div id="weekChart"></div></div>
+    <div class="stats" id="weekStats"></div>
+    <div class="card"><h3>Promedio diario, últimas 8 semanas</h3><div id="trendChart"></div></div>
+  </section>
+
+  <section id="tab-medidas" class="tab" hidden>
+    <form id="medForm" class="card">
+      <h3>Cargar medidas (cm)</h3>
+      <input id="medDate" type="date" aria-label="Fecha">
+      <div class="fields">
+        <label for="mPiernas">Pierna (muslo)<input id="mPiernas" type="number" inputmode="decimal" step="0.1" min="20" max="120"></label>
+        <label for="mPanza">Panza (ombligo)<input id="mPanza" type="number" inputmode="decimal" step="0.1" min="40" max="200"></label>
+        <label for="mPecho">Pecho<input id="mPecho" type="number" inputmode="decimal" step="0.1" min="40" max="200"></label>
+      </div>
+      <button class="primary" type="submit">Guardar medidas</button>
+      <p class="hint">Medí siempre a la misma hora, en ayunas y con la cinta sin apretar. Podés cargar solo algunas.</p>
+    </form>
+    <div class="deltas" id="medDeltas"></div>
+    <div class="card"><h3>Evolución</h3><div class="legend" id="medLegend"></div><div id="medChart"></div></div>
+    <div class="card"><h3>Historial</h3><div class="tbl-wrap" id="medList"></div></div>
+  </section>
+
+  <section id="tab-alimentos" class="tab" hidden>
+    <form id="foodForm" class="card">
+      <h3>Agregar un alimento propio</h3>
+      <div class="seg" role="group" aria-label="Cómo cargás las calorías">
+        <button type="button" data-fmode="porcion" aria-pressed="true">kcal por porción</button>
+        <button type="button" data-fmode="100" aria-pressed="false">kcal cada 100 g</button>
+      </div>
+      <label class="stack" for="fName"><span class="hint">Nombre (como lo vas a escribir)</span><input id="fName" type="text" placeholder="Ej: barrita de cereal, guiso de mamá" maxlength="60"></label>
+      <div class="fields2">
+        <label for="fKcal"><span id="fKcalLbl">kcal de 1 porción</span><input id="fKcal" type="number" inputmode="decimal" min="0" step="1"></label>
+        <label for="fUnit"><span id="fUnitLbl">La porción pesa (g)</span><input id="fUnit" type="number" inputmode="decimal" min="0" step="1" placeholder="opcional"></label>
+      </div>
+      <button class="primary" type="submit">Guardar alimento</button>
+      <p class="hint" id="fHint">Para productos que traen las kcal por unidad o porción (barritas, alfajores, un plato casero). Después escribís "2 barritas de cereal" y la app multiplica.</p>
+    </form>
+    <div class="card"><h3>Mis alimentos</h3><div id="myFoods" class="flist"></div></div>
+    <div class="card">
+      <h3>Base incluida</h3>
+      <input id="foodSearch" type="search" placeholder="Buscar: pollo, arroz, banana…" aria-label="Buscar alimento">
+      <div id="baseFoods" class="flist"></div>
+    </div>
+    <div class="card" id="backupCard"><h3>Tus datos</h3><div id="backup" class="stack"></div></div>
+  </section>
+
+  <section id="tab-amigos" class="tab" hidden>
+    <div id="acct"></div>
+    <p class="lead">Se comparten solo los totales de calorías por día y la meta. El detalle de lo que comés, tus medidas y tus alimentos quedan privados.</p>
+    <div id="friends" class="tab"></div>
+  </section>
+</div>
+
+<nav class="tabbar" aria-label="Secciones">
+  <div class="in" role="tablist">
+    <button type="button" role="tab" data-tab="hoy" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5.3 1.5 1 2.5 2 3 0-3 0-5.5 1-8.5z"/></svg>Hoy</button>
+    <button type="button" role="tab" data-tab="semana" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M5 20V11M10 20V5M15 20v-7M20 20V8"/></svg>Semana</button>
+    <button type="button" role="tab" data-tab="medidas" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="8" rx="2"/><path d="M7 8v3M11 8v4M15 8v3M19 8v4"/></svg>Medidas</button>
+    <button type="button" role="tab" data-tab="alimentos" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Alimentos</button>
+    <button type="button" role="tab" data-tab="amigos" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.5-3.5 3-5.5 6-5.5s5.5 2 6 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.6c2.6.2 4.5 2 5 5"/></svg>Amigos</button>
+  </div>
+</nav>
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="supabase.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
